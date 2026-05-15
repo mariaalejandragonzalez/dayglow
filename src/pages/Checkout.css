@@ -1,0 +1,106 @@
+.checkout-page, .payment-page {
+  padding: 1.5rem 0 5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.checkout-title, .payment-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.checkout-form { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.checkout-section {
+  background: var(--surface);
+  padding: 1.25rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.section-h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.85rem;
+  text-align: center;
+}
+
+.checkout-form .form-group { margin-bottom: 0.75rem; }
+.checkout-form .form-group:last-child { margin-bottom: 0; }
+
+.checkout-summary { padding: 1rem; }
+
+/* Payment specific */
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.payment-method {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.payment-method:hover { border-color: var(--pink-light); }
+.payment-method.selected {
+  border-color: var(--pink-primary);
+  background: var(--pink-pale);
+  box-shadow: 0 0 0 3px rgba(232,83,138,0.10);
+}
+.payment-method input[type="radio"] {
+  accent-color: var(--pink-primary);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.payment-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: white;
+  flex-shrink: 0;
+}
+.icon-card { background: linear-gradient(135deg, #FF5F00, #EB001B); }
+.icon-addi { background: #FF6B35; }
+.icon-pse { background: #00A14B; }
+
+.payment-method-label { font-weight: 500; font-size: 0.95rem; }
+
+.card-form { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem; }
+
+.card-form .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.section-h2-subtle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

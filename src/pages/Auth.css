@@ -1,0 +1,225 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  padding: 2rem 1rem;
+}
+
+.auth-card {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-logo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.logo-diamond {
+  font-size: 1.6rem;
+  color: var(--pink-primary);
+  display: block;
+  margin-bottom: 0.25rem;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  line-height: 1;
+}
+
+.brand-tagline {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin-top: 0.3rem;
+  font-style: italic;
+}
+
+.auth-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 -2rem 1.5rem;
+}
+
+.auth-title {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.form-group { margin-bottom: 0.9rem; }
+
+.form-error {
+  color: var(--pink-dark);
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  background: var(--pink-pale);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--pink-primary);
+}
+
+.form-success {
+  color: #1A7F3A;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  background: #E8F7ED;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid #2A9F50;
+}
+
+.forgot-link {
+  background: none;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  display: block;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 1.25rem;
+  transition: color 0.2s;
+}
+.forgot-link:hover { color: var(--pink-primary); }
+
+.auth-submit {
+  width: 100%;
+  padding: 0.9rem;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.auth-switch {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+
+.link-btn {
+  background: none;
+  color: var(--pink-primary);
+  font-weight: 600;
+  font-size: inherit;
+  text-decoration: underline;
+  font-family: var(--font-body);
+}
+
+.audio-label-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: none;
+  border: 1px dashed var(--border);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+}
+.audio-label-btn:hover {
+  border-color: var(--pink-primary);
+  color: var(--pink-primary);
+  background: var(--pink-pale);
+}
+
+.form-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.form-check input[type="checkbox"] {
+  accent-color: var(--pink-primary);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  cursor: pointer;
+}
+
+.success-icon {
+  width: 56px;
+  height: 56px;
+  background: var(--pink-pale);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pink-primary);
+  font-size: 1.6rem;
+  margin: 0 auto 1rem;
+}
+
+.success-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.4rem;
+  text-align: center;
+}
+
+.success-msg {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.demo-banner {
+  background: linear-gradient(135deg, var(--pink-pale), var(--pink-soft));
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 1rem;
+  font-size: 0.78rem;
+  color: var(--pink-dark);
+  text-align: center;
+  border: 1px solid var(--pink-light);
+}
+
+@media (max-width: 420px) {
+  .auth-card { padding: 2rem 1.25rem; border-radius: var(--radius-lg); }
+}
+
+/* ─── Asterisco para campos obligatorios ─── */
+.required-asterisk {
+  color: var(--pink-primary);
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+}
+
+.required-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  text-align: right;
+  font-style: italic;
+}

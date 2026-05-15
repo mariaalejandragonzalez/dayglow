@@ -1,0 +1,64 @@
+.star-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.star {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  color: var(--gray-light);
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+/* Tamaños */
+.star-rating.sm .star { font-size: 0.95rem; }
+.star-rating.md .star { font-size: 1.3rem; }
+.star-rating.lg .star { font-size: 1.8rem; }
+
+/* Llena */
+.star.filled {
+  color: #FFB800;
+}
+
+/* Media (gradiente: izquierda dorada, derecha gris) */
+.star.half {
+  background: linear-gradient(90deg, #FFB800 50%, var(--gray-light) 50%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Vacía */
+.star.empty {
+  color: var(--gray-light);
+}
+
+/* Interactivo: hover */
+.star-rating.interactive .star:hover {
+  transform: scale(1.15);
+}
+.star-rating.interactive .star:hover,
+.star-rating.interactive .star:hover ~ .star.filled {
+  color: #FFB800;
+}
+.star-rating.interactive:hover .star.filled {
+  color: var(--gray-light);
+}
+.star-rating.interactive .star:hover,
+.star-rating.interactive .star:hover ~ .star {
+  /* mantener efecto orden */
+}
+
+/* Solo lectura: no clickeable */
+.star-rating.readonly .star {
+  cursor: default;
+}
+.star-rating.readonly .star:hover {
+  transform: none;
+}

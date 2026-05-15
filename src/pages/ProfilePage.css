@@ -1,0 +1,121 @@
+.profile-page {
+  padding-bottom: 5rem;
+}
+
+.profile-hero {
+  background: linear-gradient(135deg, var(--pink-soft), var(--pink-light));
+  padding: 2rem 1.25rem 4rem;
+  position: relative;
+  text-align: center;
+  border-bottom-left-radius: 40% 30px;
+  border-bottom-right-radius: 40% 30px;
+}
+
+.back-btn-light, .edit-btn {
+  position: absolute;
+  top: 1rem;
+  background: rgba(255,255,255,0.4);
+  color: var(--pink-dark);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition: var(--transition);
+  backdrop-filter: blur(4px);
+}
+.back-btn-light { left: 1rem; }
+.edit-btn { right: 1rem; }
+.back-btn-light:hover, .edit-btn:hover { background: rgba(255,255,255,0.7); }
+
+.profile-title {
+  color: var(--pink-dark);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.audio-inline-btn-light {
+  background: rgba(255,255,255,0.5);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  transition: var(--transition);
+}
+.audio-inline-btn-light:hover { background: rgba(255,255,255,0.85); }
+
+.profile-avatar {
+  width: 110px;
+  height: 110px;
+  background: var(--surface);
+  border-radius: 50%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  border: 4px solid var(--white);
+  margin-bottom: -55px;
+}
+
+.profile-info {
+  padding-top: 4rem;
+}
+
+.profile-list {
+  list-style: none;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.profile-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.profile-item:last-child { border-bottom: none; }
+
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--pink-pale);
+  color: var(--pink-primary);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-item > div { flex: 1; }
+
+.profile-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.15rem;
+}
+
+.profile-value {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  word-break: break-word;
+}
