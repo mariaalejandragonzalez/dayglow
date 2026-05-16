@@ -193,28 +193,30 @@ export async function reportIssue(userId, orderItemId, description) {
    REVIEWS (Reseñas)
    ============================================ */
 
-export async function getReviews(productId) {
+export async function getReviews(productId, itemType = 'product') {
   if (!isSupabaseEnabled()) return { data: [], error: null };
   const { data, error } = await supabase
     .from('reviews')
     .select('*')
     .eq('product_id', productId)
+    .eq('item_type', itemType)
     .order('created_at', { ascending: false });
   return { data: data || [], error };
 }
 
-export async function getUserReview(userId, productId) {
+export async function getUserReview(userId, productId, itemType = 'product') {
   if (!isSupabaseEnabled() || !userId) return { data: null, error: null };
   const { data, error } = await supabase
     .from('reviews')
     .select('*')
     .eq('user_id', userId)
     .eq('product_id', productId)
+    .eq('item_type', itemType)
     .maybeSingle();
   return { data, error };
 }
 
-export async function createReview(userId, userName, productId, rating, comment) {
+export async function createReview(userId, userName, productId, rating, comment, itemType = 'product') {
   if (!isSupabaseEnabled() || !userId) return { error: null };
   return await supabase
     .from('reviews')
@@ -224,6 +226,7 @@ export async function createReview(userId, userName, productId, rating, comment)
       product_id: productId,
       rating,
       comment,
+      item_type: itemType,
     });
 }
 
@@ -243,13 +246,37 @@ export async function deleteReview(reviewId) {
     .eq('id', reviewId);
 }
 
-export async function hasUserPurchased(userId, productId) {
+export async function hasUserPurchased(userId, productId, itemType = 'product') {
   if (!isSupabaseEnabled() || !userId) return false;
+
+  // Para kits, el product_id en order_items se guarda como string "kit-X"
+  const searchId = itemType === 'kit' ? `kit-${productId}` : productId;
+
   const { data } = await supabase
     .from('order_items')
     .select('id, orders!inner(user_id)')
-    .eq('product_id', productId)
+    .eq('product_id', searchId)
     .eq('orders.user_id', userId)
     .limit(1);
+
+  // Si no encuentra como kit-X, intenta buscar por product_name (fallback)
+  if ((!data || data.length === 0) && itemType === 'kit') {
+    const { data: kitData } = await supabase
+      .from('kits')
+      .select('name')
+      .eq('id', productId)
+      .single();
+
+    if (kitData?.name) {
+      const { data: byName } = await supabase
+        .from('order_items')
+        .select('id, orders!inner(user_id)')
+        .eq('product_name', kitData.name)
+        .eq('orders.user_id', userId)
+        .limit(1);
+      return byName && byName.length > 0;
+    }
+  }
+
   return data && data.length > 0;
 }

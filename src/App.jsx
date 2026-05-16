@@ -6,6 +6,7 @@ import RegisterPage from './pages/RegisterPage';
 import CatalogPage from './pages/CatalogPage';
 import ProductPage from './pages/ProductPage';
 import KitsPage from './pages/KitsPage';
+import KitDetailPage from './pages/KitDetailPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import PaymentPage from './pages/PaymentPage';
@@ -39,6 +40,7 @@ export default function App() {
       case 'catalog': return <CatalogPage />;
       case 'product': return <ProductPage />;
       case 'kits': return <KitsPage />;
+      case 'kit-detail': return <KitDetailPage />;
       case 'cart': return <CartPage />;
       case 'checkout': return <CheckoutPage />;
       case 'payment': return <PaymentPage />;

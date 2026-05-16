@@ -2,17 +2,11 @@ import { useApp } from '../context/AppContext';
 import './KitsPage.css';
 
 export default function KitsPage() {
-  const { kits, speak, addToCart, setCurrentPage } = useApp();
+  const { kits, speak, setCurrentPage } = useApp();
 
-  const handleBuy = async (kit) => {
-    await addToCart({
-      id: `kit-${kit.id}`,
-      name: kit.name,
-      price: kit.price,
-      image_url: kit.image_url,
-      color: 'Standard',
-    });
-    setCurrentPage('cart');
+  const handleViewKit = (kit) => {
+    sessionStorage.setItem('selectedKitId', kit.id);
+    setCurrentPage('kit-detail');
   };
 
   return (
@@ -30,7 +24,7 @@ export default function KitsPage() {
         {kits.map(kit => (
           <article key={kit.id} className="kit-card card slide-up">
             <h2 className="kit-name">{kit.name}</h2>
-            <div className="kit-img-wrap">
+            <div className="kit-img-wrap" onClick={() => handleViewKit(kit)} style={{cursor: 'pointer'}}>
               {kit.image_url ? (
                 <img src={kit.image_url} alt={kit.name} />
               ) : (
@@ -39,12 +33,12 @@ export default function KitsPage() {
             </div>
             <p className="kit-desc">{kit.description}</p>
             <p className="kit-price">${kit.price.toLocaleString('es-CO')}</p>
-            <ul className="kit-includes" aria-label={`Incluye: ${kit.includes.join(', ')}`}>
+            <ul className="kit-includes" aria-label={`Incluye: ${kit.includes?.join(', ')}`}>
               {kit.includes?.map((item, i) => (
                 <li key={i}>{item}</li>
               ))}
             </ul>
-            <button className="btn-primary kit-btn" onClick={() => handleBuy(kit)}>
+            <button className="btn-primary kit-btn" onClick={() => handleViewKit(kit)}>
               Ver más
             </button>
           </article>

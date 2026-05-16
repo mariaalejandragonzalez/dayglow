@@ -4,7 +4,7 @@ import * as db from '../lib/db';
 import StarRating from './StarRating';
 import './ProductReviews.css';
 
-export default function ProductReviews({ productId }) {
+export default function ProductReviews({ productId, itemType = 'product' }) {
   const { user, profile, speak } = useApp();
   const [reviews, setReviews] = useState([]);
   const [userReview, setUserReview] = useState(null);
@@ -16,21 +16,26 @@ export default function ProductReviews({ productId }) {
   const [loading, setLoading] = useState(false);
   const [reloading, setReloading] = useState(true);
 
-  // Cargar reseñas al montar
+  const itemLabel = itemType === 'kit' ? 'kit' : 'producto';
+
   const loadData = async () => {
     setReloading(true);
-    const { data: reviewData } = await db.getReviews(productId);
+    const { data: reviewData } = await db.getReviews(productId, itemType);
     setReviews(reviewData);
 
     if (user?.id) {
-      const purchased = await db.hasUserPurchased(user.id, productId);
+      const purchased = await db.hasUserPurchased(user.id, productId, itemType);
       setHasPurchased(purchased);
 
-      const { data: userR } = await db.getUserReview(user.id, productId);
+      const { data: userR } = await db.getUserReview(user.id, productId, itemType);
       if (userR) {
         setUserReview(userR);
         setRating(userR.rating);
         setComment(userR.comment || '');
+      } else {
+        setUserReview(null);
+        setRating(0);
+        setComment('');
       }
     }
     setReloading(false);
@@ -39,9 +44,8 @@ export default function ProductReviews({ productId }) {
   useEffect(() => {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productId, user?.id]);
+  }, [productId, itemType, user?.id]);
 
-  // Calcular promedio
   const avgRating = reviews.length
     ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
     : 0;
@@ -64,7 +68,8 @@ export default function ProductReviews({ productId }) {
         profile?.full_name || user.email,
         productId,
         rating,
-        comment
+        comment,
+        itemType
       );
     }
     setLoading(false);
@@ -93,13 +98,13 @@ export default function ProductReviews({ productId }) {
   }
 
   return (
-    <section className="product-reviews" aria-label="Reseñas del producto">
+    <section className="product-reviews" aria-label="Reseñas">
       <div className="reviews-header">
         <h2 className="reviews-title">
           Reseñas
           <button
             className="audio-inline-btn"
-            onClick={() => speak(`Este producto tiene ${reviews.length} reseñas con un promedio de ${avgRating.toFixed(1)} estrellas de 5.`)}
+            onClick={() => speak(`Este ${itemLabel} tiene ${reviews.length} reseñas con un promedio de ${avgRating.toFixed(1)} estrellas de 5.`)}
             aria-label="Escuchar resumen de reseñas"
           >🔊</button>
         </h2>
@@ -115,7 +120,6 @@ export default function ProductReviews({ productId }) {
         )}
       </div>
 
-      {/* Botón para reseñar */}
       {user && hasPurchased && !showForm && (
         <button
           className="btn-primary review-cta"
@@ -127,17 +131,16 @@ export default function ProductReviews({ productId }) {
 
       {user && !hasPurchased && (
         <p className="purchase-required">
-          💡 Solo los usuarios que han comprado este producto pueden reseñarlo.
+          💡 Solo los usuarios que han comprado este {itemLabel} pueden reseñarlo.
         </p>
       )}
 
       {!user && (
         <p className="purchase-required">
-          💡 Inicia sesión y compra este producto para poder reseñarlo.
+          💡 Inicia sesión y compra este {itemLabel} para poder reseñarlo.
         </p>
       )}
 
-      {/* Formulario */}
       {showForm && (
         <form className="review-form card fade-in" onSubmit={handleSubmit}>
           <h3 className="form-title">
@@ -163,7 +166,7 @@ export default function ProductReviews({ productId }) {
             <textarea
               id="review-comment"
               className="input-field"
-              placeholder="¿Qué te pareció el producto? Comparte tu experiencia…"
+              placeholder={`¿Qué te pareció el ${itemLabel}? Comparte tu experiencia…`}
               rows="4"
               value={comment}
               onChange={e => setComment(e.target.value)}
@@ -202,7 +205,6 @@ export default function ProductReviews({ productId }) {
         </form>
       )}
 
-      {/* Lista de reseñas */}
       {reviews.length > 0 && (
         <ul className="reviews-list" aria-label="Lista de reseñas">
           {reviews.map(r => (

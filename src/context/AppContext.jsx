@@ -125,12 +125,32 @@ export const AppProvider = ({ children }) => {
     setCurrentPage('login');
   };
 
-  // ─── Cart actions ───
-  const addToCart = async (product) => {
+ const addToCart = async (product) => {
+    // Detectar si es un kit (id empieza con "kit-")
+    const isKit = typeof product.id === 'string' && product.id.startsWith('kit-');
+
+    // Los kits siempre van al carrito local (no a Supabase) porque su ID no es numérico
+    if (isKit) {
+      setCart(prev => {
+        const ex = prev.find(i => i.id === product.id && i.color === product.color);
+        if (ex) {
+          return prev.map(i =>
+            i.id === product.id && i.color === product.color
+              ? { ...i, quantity: i.quantity + 1 } : i
+          );
+        }
+        return [...prev, { ...product, quantity: 1, image_url: product.image_url || product.image }];
+      });
+      return;
+    }
+
+    // Productos normales: usan Supabase si está habilitado
     if (user?.id && isSupabaseEnabled()) {
       await db.addCartItem(user.id, product.id, product.color, 1);
       const { data } = await db.getCart(user.id);
-      setCart(data.map(i => ({
+      // Conservar los kits que ya están en el carrito local
+      const localKits = cart.filter(i => typeof i.id === 'string' && i.id.startsWith('kit-'));
+      const fromDb = data.map(i => ({
         cart_id: i.id,
         id: i.product_id,
         name: i.products?.name,
@@ -138,9 +158,10 @@ export const AppProvider = ({ children }) => {
         image_url: i.products?.image_url,
         color: i.color,
         quantity: i.quantity,
-      })));
+      }));
+      setCart([...fromDb, ...localKits]);
     } else {
-      // Modo demo: en memoria
+      // Modo demo: todo en memoria
       setCart(prev => {
         const ex = prev.find(i => i.id === product.id && i.color === product.color);
         if (ex) return prev.map(i =>
@@ -153,6 +174,24 @@ export const AppProvider = ({ children }) => {
   };
 
   const removeFromCart = async (item) => {
+    const isKit = typeof item.id === 'string' && item.id.startsWith('kit-');
+
+    if (isKit) {
+      // Quitar 1 unidad del kit; si la cantidad llega a 0, removerlo
+      setCart(prev => {
+        const ex = prev.find(i => i.id === item.id && i.color === item.color);
+        if (ex && ex.quantity > 1) {
+          return prev.map(i =>
+            i.id === item.id && i.color === item.color
+              ? { ...i, quantity: i.quantity - 1 } : i
+          );
+        }
+        return prev.filter(i => !(i.id === item.id && i.color === item.color));
+      });
+      return;
+    }
+
+    // Para productos normales: usar Supabase
     if (item.cart_id && isSupabaseEnabled()) {
       await db.removeCartItem(user.id, item.cart_id);
     }
