@@ -73,22 +73,62 @@ export async function getKits() {
 
 export async function getCart(userId) {
   if (!isSupabaseEnabled() || !userId) return { data: [], error: null };
-  const { data, error } = await supabase
+
+  // 1. Obtener items del carrito (sin join automático)
+  const { data: cartItems, error } = await supabase
     .from('cart_items')
-    .select('*, products(*)')
+    .select('*')
     .eq('user_id', userId);
-  return { data: data || [], error };
+
+  if (error || !cartItems || cartItems.length === 0) {
+    return { data: cartItems || [], error };
+  }
+
+  // 2. Obtener los IDs numéricos (ignorar los que empiezan con "kit-")
+  const productIds = cartItems
+    .map(i => i.product_id)
+    .filter(id => id && !String(id).startsWith('kit-'))
+    .map(id => parseInt(id))
+    .filter(id => !isNaN(id));
+
+  // 3. Si hay productos, traer su info
+  let productsMap = {};
+  if (productIds.length > 0) {
+    const { data: products } = await supabase
+      .from('products')
+      .select('*')
+      .in('id', productIds);
+    if (products) {
+      productsMap = products.reduce((acc, p) => {
+        acc[p.id] = p;
+        return acc;
+      }, {});
+    }
+  }
+
+  // 4. Combinar items del carrito con info del producto
+  const enriched = cartItems.map(item => ({
+    ...item,
+    products: productsMap[parseInt(item.product_id)] || null,
+  }));
+
+  return { data: enriched, error: null };
 }
 
 export async function addCartItem(userId, productId, color, quantity = 1) {
   if (!isSupabaseEnabled() || !userId) return { error: null };
+
+  // product_id se guarda como TEXT
+  const productIdStr = String(productId);
+
   const { data: existing } = await supabase
     .from('cart_items')
     .select('*')
     .eq('user_id', userId)
-    .eq('product_id', productId)
+    .eq('product_id', productIdStr)
     .eq('color', color)
     .maybeSingle();
+
   if (existing) {
     return await supabase
       .from('cart_items')
@@ -97,7 +137,12 @@ export async function addCartItem(userId, productId, color, quantity = 1) {
   }
   return await supabase
     .from('cart_items')
-    .insert({ user_id: userId, product_id: productId, color, quantity });
+    .insert({
+      user_id: userId,
+      product_id: productIdStr,
+      color,
+      quantity,
+    });
 }
 
 export async function removeCartItem(userId, itemId) {
